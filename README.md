@@ -1,9 +1,10 @@
 # Pidgin-English Translation Dataset
 
-This repository contains a cleaned and processed dataset of English-Pidgin translation pairs, along with the scripts used to process the data.
+This repository contains cleaned and processed datasets of English-Pidgin translation pairs and monolingual Pidgin sentences, along with the scripts used to process the data.
 
 ## Dataset Overview
 
+### Translation Pairs Dataset
 - **Language Pair**: English ↔ Nigerian Pidgin (PCM)
 - **Total Pairs**: 22,001 translation pairs
 - **Original Source**: [OPUS MT560 Dataset](https://opus.nlpl.eu/MT560)
@@ -12,29 +13,47 @@ This repository contains a cleaned and processed dataset of English-Pidgin trans
 - **Format**: Tab-separated pairs ready for machine learning training
 - **License**: CC-BY-4.0 (Creative Commons Attribution 4.0 International)
 
+### Monolingual Pidgin Dataset
+- **Language**: Nigerian Pidgin (PCM) only
+- **Total Sentences**: 176,843 sentences
+- **Original Source**: [AfriBERTa Corpus](https://huggingface.co/datasets/castorini/afriberta-corpus)
+- **Source Content**: BBC news articles and Common Crawl data
+- **Format**: One sentence per line, ready for language model pretraining
+- **License**: Apache-2.0
+
 ## Files
 
-### Processed Datasets
+### Translation Pairs Dataset
 - `pidgin-english-pairs/pidgin-english-pairs.txt` - **Final dataset**: Clean translation pairs in format `pidgin-text\t\tengglish-text`
 - `pidgin-english-pairs/pidgin-english-data-cleaned.txt` - Intermediate cleaned data with structure
 - `pidgin-english-pairs/pidgin-english-data.txt` - Initial converted data from parquet
+
+### Monolingual Pidgin Dataset
+- `pidgin-only/pidgin-sentences.txt` - **Final dataset**: 176,843 Nigerian Pidgin sentences (52.3 MB)
+- `pidgin-only/train.txt` - Original training split from AfriBERTa corpus (161,843 sentences)
+- `pidgin-only/eval.txt` - Original evaluation split from AfriBERTa corpus (15,000 sentences)
 
 ### Processing Scripts
 - `pidgin-english-pairs/parquet-to-txt-conversion.py` - Converts parquet files to text format
 - `pidgin-english-pairs/clean-pidgin-references.py` - Removes biblical references, religious terms, and formatting artifacts
 - `pidgin-english-pairs/convert-to-pairs.py` - Converts structured data to simple pairs format
+- `pidgin-only/combine-pidgin-data.py` - Combines train.txt and eval.txt into single file
 
 ### Source Data
 - `pidgin-english-pairs/*.parquet` - Original parquet files
 
 ## Dataset Statistics
 
-| Metric | Value |
-|--------|-------|
-| Translation Pairs | 22,001 |
-| Final File Size | 3.6 MB |
-| Languages | English, Nigerian Pidgin |
-| Format | Tab-separated pairs |
+| Dataset | Metric | Value |
+|---------|--------|-------|
+| **Translation Pairs** | Pairs | 22,001 |
+| | File Size | 3.6 MB |
+| | Languages | English ↔ Nigerian Pidgin |
+| | Format | Tab-separated pairs |
+| **Monolingual Pidgin** | Sentences | 176,843 |
+| | File Size | 52.3 MB |
+| | Language | Nigerian Pidgin only |
+| | Format | One sentence per line |
 
 ## Data Processing Pipeline
 
@@ -45,6 +64,7 @@ This repository contains a cleaned and processed dataset of English-Pidgin trans
 
 ## Dataset Attribution
 
+### Translation Pairs Dataset
 This dataset is derived from the **OPUS MT560 dataset**, which contains parallel sentences extracted from religious texts. The original dataset was created by **michsethowusu** and is available on Hugging Face. Our processing pipeline has:
 
 - ✅ **Removed religious content**: Biblical references like `( Jas . 1 : 25 )` and terms like "Jehovah", "Witness"
@@ -52,18 +72,38 @@ This dataset is derived from the **OPUS MT560 dataset**, which contains parallel
 - ✅ **Standardized structure**: Converted to clean tab-separated pairs format
 - ✅ **Maintained quality**: Preserved all 22,001 translation pairs with improved readability
 
+### Monolingual Pidgin Dataset
+This dataset is a subset from the **AfriBERTa Corpus**, which was used to pretrain AfriBERTa language models. The corpus contains text from BBC news website and Common Crawl data. Our dataset includes:
+
+- ✅ **Complete coverage**: Combined train and evaluation splits from original dataset
+- ✅ **News domain**: Mostly BBC news content in Nigerian Pidgin
+- ✅ **Large scale**: 176,843 sentences suitable for language model pretraining
+- ✅ **Clean format**: One sentence per line, ready for processing
+
 ## Usage
 
-### For Machine Learning Training
+### For Translation Model Training
 
-The final dataset `pidgin-english-pairs.txt` is ready for use with language models:
+The translation pairs dataset `pidgin-english-pairs.txt` is ready for use with machine translation models:
 
 ```python
-# Example: Load the dataset
+# Example: Load the translation dataset
 with open('pidgin-english-pairs/pidgin-english-pairs.txt', 'r', encoding='utf-8') as f:
     for line in f:
         pidgin_text, english_text = line.strip().split('\t\t')
-        # Your training code here
+        # Your translation model training code here
+```
+
+### For Language Model Pretraining
+
+The monolingual pidgin dataset `pidgin-sentences.txt` is ready for language model pretraining:
+
+```python
+# Example: Load the monolingual dataset
+with open('pidgin-only/pidgin-sentences.txt', 'r', encoding='utf-8') as f:
+    for line in f:
+        pidgin_sentence = line.strip()
+        # Your language model pretraining code here
 ```
 
 ### Re-running the Processing Pipeline
@@ -121,12 +161,29 @@ Please refer to the citation guide of the original OPUS MT560 dataset.
 }
 ```
 
+**AfriBERTa Corpus:**
+```
+@inproceedings{ogueji-etal-2021-small,
+    title = "Small Data? No Problem! Exploring the Viability of Pretrained Multilingual Language Models for Low-resourced Languages",
+    author = "Ogueji, Kelechi  and
+      Zhu, Yuxin  and
+      Lin, Jimmy",
+    booktitle = "Proceedings of the 1st Workshop on Multilingual Representation Learning",
+    month = nov,
+    year = "2021",
+    address = "Punta Cana, Dominican Republic",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.mrl-1.11",
+    pages = "116--126",
+}
+```
+
 **This Cleaned Version:**
 ```
 @dataset{pidgin_english_cleaned_2024,
   title={Cleaned Pidgin-English Translation Dataset},
   year={2024},
-  note={Processed from michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560},
-  description={22,001 English-Pidgin translation pairs cleaned of religious references}
+  note={Processed from michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560 and castorini/afriberta-corpus},
+  description={22,001 English-Pidgin translation pairs and 176,843 monolingual Pidgin sentences}
 }
 ```
