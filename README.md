@@ -180,9 +180,9 @@ Please refer to the citation guide of the original OPUS MT560 dataset.
 
 **This Cleaned Version:**
 ```
-@dataset{pidgin_english_cleaned_2024,
+@dataset{pidgin_english_cleaned_2025,
   title={Cleaned Pidgin-English Translation Dataset},
-  year={2024},
+  year={2025},
   note={Processed from michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560 and castorini/afriberta-corpus},
   description={22,001 English-Pidgin translation pairs and 176,843 monolingual Pidgin sentences}
 }
