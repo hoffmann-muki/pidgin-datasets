@@ -2,7 +2,7 @@
 """
 Clean Pidgin References and Religious Terms
 Cleans the pidgin-english-data.txt file by:
-1. Removing biblical references (text in parentheses) from pcm lines
+1. Removing biblical references and parenthetical content from ANYWHERE in both eng and pcm lines
 2. Removing "Jehovah" and "Witness" from all lines
 3. Removing leading non-alphabetic characters from all lines
 4. Cleaning up extra spaces
@@ -12,11 +12,27 @@ import re
 import os
 
 def clean_biblical_references(text):
-    """Remove biblical references in parentheses from the beginning of pcm lines"""
-    # Remove text between parentheses at the start, including the parentheses
-    # Pattern: ( ... ) followed by optional spaces
-    cleaned = re.sub(r'^\s*\([^)]*\)\s*', '', text)
-    return cleaned
+    """
+    Remove parenthetical references from anywhere in the text.
+    This includes biblical references, study notes, and other citations.
+    
+    Examples:
+    - "text ( Ps . 23:1 ) more text" -> "text more text"
+    - "beginning ( Phil . 4 : 7 , ftn . ) end" -> "beginning end"
+    - "start ( Check paragraph 17 ) continue" -> "start continue"
+    - "incomplete ( Ps . at end" -> "incomplete at end"
+    """
+    # Remove complete parenthetical content (with closing parenthesis) from anywhere
+    pattern_complete = r'\s*\([^)]*\)\s*'
+    cleaned = re.sub(pattern_complete, ' ', text)
+    
+    # Remove incomplete parenthetical content (without closing parenthesis, typically at end)
+    pattern_incomplete = r'\s*\([^)]*$'
+    cleaned = re.sub(pattern_incomplete, '', cleaned)
+    
+    # Clean up multiple spaces
+    cleaned = re.sub(r'\s+', ' ', cleaned)
+    return cleaned.strip()
 
 def remove_religious_terms(text):
     """Remove 'Jehovah' and 'Witness' from text"""
@@ -75,7 +91,7 @@ def clean_pidgin_data():
     print(f"Output file: {output_file}")
     
     processed_lines = 0
-    cleaned_pcm_lines = 0
+    cleaned_reference_lines = 0
     cleaned_leading_chars = 0
     
     try:
@@ -99,11 +115,10 @@ def clean_pidgin_data():
                         prefix, content = line.split(':', 1)
                         content = content.strip()
                         
-                        # Apply cleaning based on line type
-                        if prefix.strip() == 'pcm':
-                            # Remove biblical references from pcm lines
-                            content = clean_biblical_references(content)
-                            cleaned_pcm_lines += 1
+                        # Remove parenthetical references from both eng and pcm lines
+                        content = clean_biblical_references(content)
+                        if prefix.strip() in ['eng', 'pcm']:
+                            cleaned_reference_lines += 1
                         
                         # Remove religious terms from all lines
                         content = remove_religious_terms(content)
@@ -135,7 +150,7 @@ def clean_pidgin_data():
     
         print(f"\nCleaning completed!")
         print(f"- Total lines processed: {processed_lines:,}")
-        print(f"- PCM lines cleaned: {cleaned_pcm_lines:,}")
+        print(f"- Lines with references removed: {cleaned_reference_lines:,}")
         print(f"- Lines with leading chars removed: {cleaned_leading_chars:,}")
         
         # Show file sizes
