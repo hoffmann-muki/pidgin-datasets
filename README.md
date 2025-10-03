@@ -6,8 +6,11 @@ This repository contains a cleaned and processed dataset of English-Pidgin trans
 
 - **Language Pair**: English ↔ Nigerian Pidgin (PCM)
 - **Total Pairs**: 22,001 translation pairs
-- **Source**: Religious texts (cleaned of biblical references and religious terminology)
+- **Original Source**: [OPUS MT560 Dataset](https://opus.nlpl.eu/MT560)
+- **Hugging Face Dataset**: [michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560](https://huggingface.co/datasets/michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560)
+- **Source Content**: Religious texts (cleaned of biblical references and religious terminology)
 - **Format**: Tab-separated pairs ready for machine learning training
+- **License**: CC-BY-4.0 (Creative Commons Attribution 4.0 International)
 
 ## Files
 
@@ -35,9 +38,19 @@ This repository contains a cleaned and processed dataset of English-Pidgin trans
 
 ## Data Processing Pipeline
 
-1. **Extract**: Convert parquet files to structured text (`parquet-to-txt-conversion.py`)
-2. **Clean**: Remove biblical references, religious terms, and formatting (`clean-pidgin-references.py`)
-3. **Format**: Convert to simple pairs format (`convert-to-pairs.py`)
+1. **Source**: Downloaded from [Hugging Face dataset](https://huggingface.co/datasets/michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560)
+2. **Extract**: Convert parquet files to structured text (`parquet-to-txt-conversion.py`)
+3. **Clean**: Remove biblical references, religious terms, and formatting (`clean-pidgin-references.py`)
+4. **Format**: Convert to simple pairs format (`convert-to-pairs.py`)
+
+## Dataset Attribution
+
+This dataset is derived from the **OPUS MT560 dataset**, which contains parallel sentences extracted from religious texts. The original dataset was created by **michsethowusu** and is available on Hugging Face. Our processing pipeline has:
+
+- ✅ **Removed religious content**: Biblical references like `( Jas . 1 : 25 )` and terms like "Jehovah", "Witness"
+- ✅ **Cleaned formatting**: Removed enumeration patterns `( a )`, `( b )` and leading non-alphabetic characters  
+- ✅ **Standardized structure**: Converted to clean tab-separated pairs format
+- ✅ **Maintained quality**: Preserved all 22,001 translation pairs with improved readability
 
 ## Usage
 
@@ -86,12 +99,34 @@ pip install pandas pyarrow fastparquet
 
 ## License
 
-[Add your license information here]
+This dataset is released under the **Creative Commons Attribution 4.0 International License** (CC-BY-4.0).
 
 ## Citation
 
 If you use this dataset, please cite:
 
+**Original OPUS MT560 Dataset:**
 ```
-[Add citation information here]
+Please refer to the citation guide of the original OPUS MT560 dataset.
+```
+
+**Hugging Face Dataset:**
+```
+@dataset{michsethowusu_english_nigerian_pidgin_2024,
+  title={English-Nigerian Pidgin Parallel Dataset},
+  author={michsethowusu},
+  year={2024},
+  url={https://huggingface.co/datasets/michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560},
+  license={CC-BY-4.0}
+}
+```
+
+**This Cleaned Version:**
+```
+@dataset{pidgin_english_cleaned_2024,
+  title={Cleaned Pidgin-English Translation Dataset},
+  year={2024},
+  note={Processed from michsethowusu/english-nigerian-pidgin_sentence-pairs_mt560},
+  description={22,001 English-Pidgin translation pairs cleaned of religious references}
+}
 ```
